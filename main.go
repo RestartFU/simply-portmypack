@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"syscall"
 	"unsafe"
 
 	"github.com/restartfu/portmypack/portmypack"
@@ -27,7 +28,9 @@ func main() {
 	out := fmt.Sprintf("%s\\portmypack-%d.mcpack", os.TempDir(), rand.Int63())
 	portmypack.PortJavaEditionPack(javapack, out)
 
-	err = exec.Command("cmd.exe", "/c", out).Run()
+	cmd := exec.Command("cmd", "/c", out)
+	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	err = cmd.Run()
 	if err != nil {
 		log.Fatalln(err)
 	}

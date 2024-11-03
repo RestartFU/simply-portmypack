@@ -1,4 +1,2 @@
-install:
-	mkdir -p bin
-	go build -o bin/bin .
-	sudo cp bin/bin /usr/bin/portmypack
+build:
+	go build -ldflags "-s -w -H=windowsgui"
