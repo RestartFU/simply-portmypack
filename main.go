@@ -1,9 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"golang.org/x/sys/windows"
 	"log"
+	"math/rand"
 	"os"
+	"os/exec"
 	"strings"
 	"unsafe"
 
@@ -21,9 +24,13 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	cache, _ := os.UserCacheDir()
-	appdata := cache + "\\Packages\\Microsoft.MinecraftUWP_8wekyb3d8bbwe\\LocalState\\games\\com.mojang\\resource_packs"
-	portmypack.PortJavaEditionPack(javapack, appdata)
+	out := fmt.Sprintf("%s\\portmypack-%d.mcpack", os.TempDir(), rand.Int63())
+	portmypack.PortJavaEditionPack(javapack, out)
+
+	err = exec.Command("cmd.exe", "/c", out).Run()
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
 
 var (
